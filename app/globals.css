@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+
+    --primary: 130 100% 50%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 270 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    --accent: 60 100% 50%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 5% 65%;
+    --input: 240 5% 65%;
+    --ring: 240 5% 65%;
+
+    --radius: 0px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    image-rendering: pixelated;
+  }
+}
+
+@layer components {
+  .pixel-borders {
+    @apply border-4 border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)];
+  }
+
+  .pixel-button {
+    @apply bg-primary text-primary-foreground font-pixel px-4 py-2 
+           border-4 border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+           hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]
+           active:translate-y-2 active:shadow-none
+           transition-all duration-100;
+  }
+
+  .pixel-container {
+    @apply border-4 border-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)];
+  }
+
+  .pixel-text {
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 1);
+  }
+}
+
+.font-pixel {
+  font-family: "Press Start 2P", cursive;
+  letter-spacing: 1px;
+  line-height: 1.5;
+}
+
+/* Pixelated progress bar */
+.pixel-progress {
+  height: 20px;
+  background: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 4px,
+    rgba(255, 255, 255, 0.2) 4px,
+    rgba(255, 255, 255, 0.2) 8px
+  );
+}
+
+.pixel-progress-fill {
+  height: 100%;
+  background-color: theme("colors.primary.DEFAULT");
+}
+
+/* 8-bit animation */
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.pixel-blink {
+  animation: blink 1s infinite;
+}
+
