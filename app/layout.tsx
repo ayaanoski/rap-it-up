@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const opts = {
-    redirectUri: "http://localhost:3000/songs",
+    redirectUri: "https://rap-it-up.vercel.app/songs",
     referalUri: "OSKI",
   }
   return (
