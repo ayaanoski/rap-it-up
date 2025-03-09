@@ -1,81 +1,97 @@
-"use client"
-
-import { useEffect, useRef } from "react"
+import Image from "next/image";
 
 export function PixelatedBackground() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const gifs = [
+    { src: "/Pixelart/pixel1.gif", brightness: "bright", size: "small" },
+    { src: "/Pixelart/pixel2.gif", brightness: "normal", size: "medium" },
+    { src: "/Pixelart/pixel3.gif", brightness: "bright", size: "large" },
+    { src: "/Pixelart/pixel4.gif", brightness: "normal", size: "small" },
+    { src: "/Pixelart/pixel5.gif", brightness: "bright", size: "medium" },
+    { src: "/Pixelart/pixel6.gif", brightness: "normal", size: "large" },
+    { src: "/Pixelart/pixel7.gif", brightness: "bright", size: "small" },
+    { src: "/Pixelart/pixel8.gif", brightness: "normal", size: "medium" },
+    { src: "/Pixelart/pixel9.gif", brightness: "bright", size: "large" },
+  ];
 
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+  return (
+    <div className="absolute inset-0 z-0 opacity-50">
+      {/* Gradient overlay with light yellow undertone */}
+      <div className="absolute inset-0 bg-gradient-to-br from-yellow-100/30 via-yellow-200/40 to-orange-500/50"></div>
 
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+      {/* Container for GIFs with absolute positioning */}
+      <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-4 p-4">
+        {gifs.map((gif, index) => (
+          <div
+            key={index}
+            className={`relative transition-all duration-1000 ease-in-out hover:scale-105 ${
+              index % 2 === 0 ? "animate-float-even" : "animate-float-odd"
+            }`}
+            style={{
+              width: "100%", // Ensure each grid cell takes full width
+              height: "100%", // Ensure each grid cell takes full height
+            }}
+          >
+            <div
+              className={`relative w-full h-full ${
+                gif.brightness === "bright" ? "brightness-150" : "brightness-100"
+              }`}
+            >
+              <div
+                className={`w-full h-full rounded-lg border-4 ${
+                  gif.brightness === "bright"
+                    ? "border-yellow-300 shadow-lg shadow-yellow-400/50"
+                    : "border-yellow-200 shadow-md shadow-yellow-300/30"
+                } overflow-hidden`}
+                style={{ opacity: 0.8 }} // Add transparency here
+              >
+                <Image
+                  src={gif.src}
+                  alt={`Pixel Art ${index + 1}`}
+                  fill
+                  className="object-cover"
+                  style={{ opacity: gif.brightness === "bright" ? 1 : 0.8 }}
+                  unoptimized // Use this if GIFs are not optimized by Next.js
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-    // Set canvas size to match window
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-      drawBackground()
-    }
-
-    window.addEventListener("resize", resizeCanvas)
-    resizeCanvas()
-
-    // Draw pixelated background
-    function drawBackground() {
-      const gridSize = 20
-      const colors = [
-        "#000000", // Black
-        "#111111", // Dark gray
-        "#222222", // Slightly lighter gray
-      ]
-
-      // Clear canvas
-      ctx.fillStyle = "#000000"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-      // Draw grid of pixels
-      for (let x = 0; x < canvas.width; x += gridSize) {
-        for (let y = 0; y < canvas.height; y += gridSize) {
-          // Random color from our palette
-          const colorIndex = Math.floor(Math.random() * colors.length)
-          ctx.fillStyle = colors[colorIndex]
-          ctx.fillRect(x, y, gridSize, gridSize)
+      {/* Floating animation styles */}
+      <style jsx>{`
+        @keyframes float-even {
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+          100% {
+            transform: translateY(0);
+          }
         }
-      }
 
-      // Add some "music wave" effect at the bottom
-      const waveHeight = 100
-      const waveStart = canvas.height - waveHeight
+        @keyframes float-odd {
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(10px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
 
-      for (let x = 0; x < canvas.width; x += gridSize) {
-        const height = Math.sin(x * 0.02) * 20 + Math.random() * 15
-        const barHeight = Math.max(10, height)
+        .animate-float-even {
+          animation: float-even 4s ease-in-out infinite;
+        }
 
-        ctx.fillStyle = "#00ff00" // Green for audio waves
-        ctx.globalAlpha = 0.3
-        ctx.fillRect(x, waveStart + waveHeight - barHeight, gridSize - 2, barHeight)
-        ctx.globalAlpha = 1
-      }
-    }
-
-    // Animate background slightly
-    let animationFrame: number
-
-    const animate = () => {
-      drawBackground()
-      animationFrame = requestAnimationFrame(animate)
-    }
-
-    animate()
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas)
-      cancelAnimationFrame(animationFrame)
-    }
-  }, [])
-
-  return <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full object-cover" />
+        .animate-float-odd {
+          animation: float-odd 4s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
+  );
 }
-

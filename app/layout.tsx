@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import OCConnectWrapper from "@/components/OCConnectWrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,6 +18,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const opts = {
+    redirectUri: "http://localhost:3000/songs",
+    referalUri: "OSKI",
+  }
   return (
     <html lang="en">
       <head>
@@ -26,7 +31,9 @@ export default function RootLayout({
       </head>
       <body className="font-pixel bg-black text-white">
         <ThemeProvider attribute="class" defaultTheme="dark">
+          <OCConnectWrapper opts={opts} sandboxMode={true}>
           {children}
+          </OCConnectWrapper>
         </ThemeProvider>
       </body>
     </html>
